@@ -14,10 +14,10 @@ class createBlankBarGraph(object):
     #variables
     graphColorSheetPath = None
     colorSheetData = None
-    graphImage = None
+    graphImage = {'base':None,'draw':None}
 
     #function to initialize the class
-    def __init__(self, graphColorSheetPath) -> None:
+    def __init__(self, graphColorSheetPath, width, height) -> None:
 
         #set the variable for the color sheet path
         self.graphColorSheetPath = graphColorSheetPath
@@ -86,7 +86,7 @@ class createBlankBarGraph(object):
         except AssertionError:
             raise pygraphGraphicsException('The graph color sheet you attempted to load supplied infinity as the value for "textSizeForCoordinates", so it failed to load.')
         try:
-            assert backgroundColor in jsonData
+            assert 'backgroundColor' in jsonData
         except AssertionError:
             raise pygraphGraphicsException('THe graph color sheet you attempted to load does not contain the key "backgroundColor", so it failed to load.')
 
