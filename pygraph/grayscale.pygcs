@@ -1,5 +1,5 @@
 {
-    "linearGraphColors":[
+    "graphDataColors":[
         "#aba9a9",
         "#878787",
         "#6e6a6a",
@@ -15,5 +15,7 @@
         ],
     "textSizeForCoordinates":15,
     "textSizeForTitles":15,
-    "backgroundColor":"#ffffff"
+    "backgroundColor":"#ffffff",
+    "borderColor":"#000000",
+    "crosshairColor":"#0b0b0b",
 }
