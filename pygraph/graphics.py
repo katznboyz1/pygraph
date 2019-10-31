@@ -15,6 +15,9 @@ class createBlankBarGraph(object):
     graphColorSheetPath = None
     colorSheetData = None
     graphImage = {'base':None,'draw':None}
+    graphBarsMax = None
+    graphTitle = 'Title'
+    graphXTitle = 'X Axis Title'
 
     #function to initialize the class
     def __init__(self, graphColorSheetPath, width, height) -> None:
@@ -27,7 +30,8 @@ class createBlankBarGraph(object):
             pass
         else:
             raise pygraphGraphicsException('For some reason loadColorSheet() returned false, this should never happen. Reinstalling the module should fix this.')
-        
+
+        #set the variables
         self.graphImage['base'] = PIL.Image.new('RGBA', [width, height], self.colorSheetData['backgroundColor'])
         self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
 
@@ -45,17 +49,17 @@ class createBlankBarGraph(object):
 
         #validify the json data (oooo yea dont we love memory eating try catches)
         try:
-            assert "linearGraphColors" in jsonData
+            assert "graphDataColors" in jsonData
         except AssertionError:
-            raise pygraphGraphicsException('The graph color sheet you attempted to load doesnt contain the key "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load doesnt contain the key "graphDataColors", so it failed to load.')
         try:
-            assert type(jsonData['linearGraphColors']) == list
+            assert type(jsonData['graphDataColors']) == list
         except AssertionError:
-            raise pygraphGraphicsException('The graph color sheet you attempted to load had a non list value for "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load had a non list value for "graphDataColors", so it failed to load.')
         try:
-            assert len(jsonData['linearGraphColors']) >= 1
+            assert len(jsonData['graphDataColors']) >= 1
         except AssertionError:
-            raise pygraphGraphicsException('The graph color sheet you attempted to load had a list with no values for "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load had a list with no values for "graphDataColors", so it failed to load.')
         try:
             assert "textSizeForCoordinates" in jsonData
         except AssertionError:
@@ -99,11 +103,30 @@ class createBlankBarGraph(object):
         #return true since this succeeded
         return True
     
-    #create a function to save the graph to an image file
-    def save(self, path) -> str:
+    #function to save the graph to an image file
+    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 100, drawTitles = True, drawBorders = True) -> str:
 
         #convert the path to a string just in case
         path = str(path)
+
+        #calculate the zone where the graphs should be is
+        barGraphSafeZoneBounds = [
+            [int(barGraphSidePadding), int(barGraphTopPadding)],
+            [int(self.graphImage['base'].size[0] - barGraphSidePadding), int(self.graphImage['base'].size[1] - barGraphTopPadding)]
+        ]
+
+        #if the user wants to draw the borders then draw them
+        if (drawBorders):
+
+            #get the border color
+            borderColor = self.colorSheetData['borderColor']
+
+            #draw the borders
+            self.graphImage['draw'].line([
+                (*barGraphSafeZoneBounds[0]),
+                (int(barGraphSafeZoneBounds[0][0]), int(barGraphSafeZoneBounds[1][1])),
+                (*barGraphSafeZoneBounds[1])
+            ], fill = borderColor, width = 2)
 
         #save the image
         self.graphImage['base'].save(path)
