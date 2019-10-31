@@ -144,7 +144,7 @@ class createBlankBarGraph(object):
         self.graphData[valueTitle] = valueMeasure
 
     #function to save the graph to an image file
-    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True) -> str:
+    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True, maxDataPlotSize = float('inf')) -> str:
 
         #convert the path to a string just in case
         path = str(path)
@@ -177,7 +177,7 @@ class createBlankBarGraph(object):
             graphTitleColor = self.colorSheetData['titleColors']['graphTitle']
 
             #calculate the size of the y axis title
-            yAxisTextFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphSidePadding / 1.5))
+            yAxisTextFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphSidePadding / 3))
             yAxisTextSize = self.graphImage['draw'].textsize(self.graphYTitle, yAxisTextFont)
 
             #rotate the image and draw the text
@@ -185,7 +185,7 @@ class createBlankBarGraph(object):
             self.graphImage['base'].save(path)
             self.graphImage['base'] = PIL.Image.open(path)
             self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
-            yAxisTextPosition = [int((self.graphImage['base'].size[0] - yAxisTextSize[0]) / 2), int(0)]
+            yAxisTextPosition = [int((self.graphImage['base'].size[0] - yAxisTextSize[0]) / 2), int((barGraphSidePadding - yAxisTextSize[1]) / 2)]
             self.graphImage['draw'].text(yAxisTextPosition, self.graphYTitle, yAxisTitleColor, font = yAxisTextFont)
             self.graphImage['base'].save(path)
             self.graphImage['base'] = PIL.Image.open(path)
@@ -193,12 +193,45 @@ class createBlankBarGraph(object):
             self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
 
             #calculate the size of the graph title
-            graphTitleFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphTopPadding / 1.5))
+            graphTitleFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphTopPadding / 3))
             graphTitleSize = self.graphImage['draw'].textsize(self.graphTitle, graphTitleFont)
 
             #draw the title text
             graphTitleTextPosition = [int((self.graphImage['base'].size[0] - graphTitleSize[0]) / 2), int((barGraphTopPadding - graphTitleSize[1]) / 2)]
             self.graphImage['draw'].text(graphTitleTextPosition, self.graphTitle, graphTitleColor, font = graphTitleFont)
+        
+        #calculate the data graphing info
+        graphDataEntryWidth = int(barGraphSafeZoneBounds[1][0] - barGraphSafeZoneBounds[0][0])
+        graphDataEntryHeight = int(barGraphSafeZoneBounds[1][1] - barGraphSafeZoneBounds[0][1])
+        graphDataEntryPoints = len(self.graphData)
+        graphDataList = list(self.graphData)
+        colorStep = 0
+        dataWidth = int(graphDataEntryWidth / graphDataEntryPoints)
+        if (dataWidth > maxDataPlotSize):
+            dataWidth = int(maxDataPlotSize)
+        dataWidthHalf = int(dataWidth / 2)
+        measures = []
+        for each in self.graphData:
+            measures.append(self.graphData[each])
+        maxMeasure = max(measures)
+
+        #iterate through the data
+        for plot in range(graphDataEntryPoints):
+            title = graphDataList[plot]
+            measure = self.graphData[title]
+            currentGraphColor = self.colorSheetData['graphDataColors'][colorStep]
+            xPosition = plot * dataWidth
+            height = int((measure / maxMeasure) * graphDataEntryHeight)
+
+            #draw the rectangle
+            self.graphImage['draw'].rectangle([
+                int(barGraphSafeZoneBounds[0][0] + xPosition), int(barGraphSafeZoneBounds[1][1] - height), int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1])
+            ], fill = currentGraphColor, outline = currentGraphColor, width = 1)
+
+            #if the color step is greater than the data color length then reset it
+            colorStep += 1
+            if (colorStep > len(self.colorSheetData['graphDataColors'])):
+                colorStep = 0
 
         #save the image
         self.graphImage['base'].save(path)
