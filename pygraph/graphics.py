@@ -31,7 +31,10 @@ class createBlankBarGraph(object):
     def loadColorSheet(self) -> bool:
 
         #validify that the path to the color sheet exists
-        assert os.path.exists(self.graphColorSheetPath)
+        try:
+            assert os.path.exists(self.graphColorSheetPath)
+        except AssertionError:
+            raise FileNotFoundError('The graph color sheet located at "{}" was not found.'.format(self.graphColorSheetPath))
 
         #load the json data
         jsonData = json.loads(str(open(self.graphColorSheetPath).read()))
