@@ -19,6 +19,7 @@ class createBlankBarGraph(object):
     graphTitle = 'Title'
     graphYTitle = 'Y Axis Title'
     fontPath = None
+    graphData = {}
 
     #function to initialize the class
     def __init__(self, graphColorSheetPath, fontPath, width, height) -> None:
@@ -121,8 +122,29 @@ class createBlankBarGraph(object):
         #return true since this succeeded
         return True
     
+    #function to add a value to the graph
+    def addValueToChart(self, valueTitle, valueMeasure) -> None:
+
+        #convert the value title to a string
+        valueTitle = str(valueTitle)
+
+        #validate the value measure
+        try:
+            valueMeasure = int(valueMeasure)
+        except ValueError:
+            raise pygraphGraphicsException('The value measure that you supplied was not a valid integer. addValueToChart()\'s valueMeasure argument must be an integer.')
+    
+        #check that the value does not already exist
+        try:
+            assert not valueTitle in self.graphData
+        except AssertionError:
+            raise pygraphGraphicsException('The value title you supplied already exists. The graph can not have two entries with the same title. The value supplied was "{}".'.format(valueTitle))
+        
+        #store the values
+        self.graphData[valueTitle] = valueMeasure
+
     #function to save the graph to an image file
-    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 100, drawTitles = True, drawBorders = True) -> str:
+    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True) -> str:
 
         #convert the path to a string just in case
         path = str(path)
