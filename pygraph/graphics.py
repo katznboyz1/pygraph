@@ -14,6 +14,7 @@ class createBlankBarGraph(object):
     #variables
     graphColorSheetPath = None
     colorSheetData = None
+    graphImage = None
 
     #function to initialize the class
     def __init__(self, graphColorSheetPath) -> None:
@@ -43,47 +44,51 @@ class createBlankBarGraph(object):
         try:
             assert "linearGraphColors" in jsonData
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load doesnt contain the key "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load doesnt contain the key "linearGraphColors", so it failed to load.')
         try:
             assert type(jsonData['linearGraphColors']) == list
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load had a non list value for "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load had a non list value for "linearGraphColors", so it failed to load.')
         try:
             assert len(jsonData['linearGraphColors']) >= 1
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load had a list with no values for "linearGraphColors", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load had a list with no values for "linearGraphColors", so it failed to load.')
         try:
             assert "textSizeForCoordinates" in jsonData
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load does not contain the key "textSizeForCoordinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load does not contain the key "textSizeForCoordinates", so it failed to load.')
         try:
             assert type(jsonData['textSizeForCoordinates']) == int
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied a non integer value for "textSizeForCoordinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied a non integer value for "textSizeForCoordinates", so it failed to load.')
         try:
             assert jsonData['textSizeForCoordinates'] >= 0
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied an integer value less than zero for "textSizeForCoordinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied an integer value less than zero for "textSizeForCoordinates", so it failed to load.')
         try:
             assert jsonData['textSizeForCoordinates'] != float('inf')
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied infinity as the value for "textSizeForCoordinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied infinity as the value for "textSizeForCoordinates", so it failed to load.')
         try:
             assert "textSizeForTitles" in jsonData
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load does not contain the key "textSizeForTitles", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load does not contain the key "textSizeForTitles", so it failed to load.')
         try:
             assert type(jsonData['textSizeForTitles']) == int
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied a non integer value for "textSizeForCoodinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied a non integer value for "textSizeForCoodinates", so it failed to load.')
         try:
             assert jsonData['textSizeForTitles'] >= 0
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied an integer value less than zero for "textSizeForTitles", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied an integer value less than zero for "textSizeForTitles", so it failed to load.')
         try:
             assert jsonData['textSizeForTitles'] != float('inf')
         except AssertionError:
-            raise pygraphGraphicsException('The graph you attempted to load supplied infinity as the value for "textSizeForCoordinates", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied infinity as the value for "textSizeForCoordinates", so it failed to load.')
+        try:
+            assert backgroundColor in jsonData
+        except AssertionError:
+            raise pygraphGraphicsException('THe graph color sheet you attempted to load does not contain the key "backgroundColor", so it failed to load.')
 
         #since it is valid then set the color data to this
         self.colorSheetData = jsonData

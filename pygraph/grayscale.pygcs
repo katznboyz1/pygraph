@@ -1,8 +1,5 @@
 {
     "linearGraphColors":[
-        "#ffffff",
-        "#e0dada",
-        "#c4c2c2",
         "#aba9a9",
         "#878787",
         "#6e6a6a",
@@ -15,10 +12,8 @@
         "#545151",
         "#6e6a6a",
         "#878787",
-        "#aba9a9",
-        "#c4c2c2",
-        "#e0dada",
         ],
     "textSizeForCoordinates":15,
-    "textSizeForTitles":15
+    "textSizeForTitles":15,
+    "backgroundColor":"#ffffff"
 }
