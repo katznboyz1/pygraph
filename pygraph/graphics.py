@@ -27,7 +27,10 @@ class createBlankBarGraph(object):
             pass
         else:
             raise pygraphGraphicsException('For some reason loadColorSheet() returned false, this should never happen. Reinstalling the module should fix this.')
-    
+        
+        self.graphImage['base'] = PIL.Image.new('RGBA', [width, height], self.colorSheetData['backgroundColor'])
+        self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
+
     #function to load the color sheet
     def loadColorSheet(self) -> bool:
 
@@ -95,3 +98,15 @@ class createBlankBarGraph(object):
 
         #return true since this succeeded
         return True
+    
+    #create a function to save the graph to an image file
+    def save(self, path) -> str:
+
+        #convert the path to a string just in case
+        path = str(path)
+
+        #save the image
+        self.graphImage['base'].save(path)
+
+        #return the path to the image
+        return path
