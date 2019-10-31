@@ -17,7 +17,7 @@ class createBlankBarGraph(object):
     graphImage = {'base':None,'draw':None}
     graphBarsMax = None
     graphTitle = 'Title'
-    graphXTitle = 'X Axis Title'
+    graphYTitle = 'Y Axis Title'
     fontPath = None
 
     #function to initialize the class
@@ -150,7 +150,33 @@ class createBlankBarGraph(object):
         if (drawTitles):
 
             #get the title colors
-            pass
+            xAxisTitleColor = self.colorSheetData['titleColors']['xAxis']
+            yAxisTitleColor = self.colorSheetData['titleColors']['yAxis']
+            graphTitleColor = self.colorSheetData['titleColors']['graphTitle']
+
+            #calculate the size of the y axis title
+            yAxisTextFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphSidePadding / 1.5))
+            yAxisTextSize = self.graphImage['draw'].textsize(self.graphYTitle, yAxisTextFont)
+
+            #rotate the image and draw the text
+            self.graphImage['base'] = self.graphImage['base'].rotate(-90, expand = 1)
+            self.graphImage['base'].save(path)
+            self.graphImage['base'] = PIL.Image.open(path)
+            self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
+            yAxisTextPosition = [int((self.graphImage['base'].size[0] - yAxisTextSize[0]) / 2), int(0)]
+            self.graphImage['draw'].text(yAxisTextPosition, self.graphYTitle, yAxisTitleColor, font = yAxisTextFont)
+            self.graphImage['base'].save(path)
+            self.graphImage['base'] = PIL.Image.open(path)
+            self.graphImage['base'] = self.graphImage['base'].rotate(90, expand = 1)
+            self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
+
+            #calculate the size of the graph title
+            graphTitleFont = PIL.ImageFont.truetype(self.fontPath, int(barGraphTopPadding / 1.5))
+            graphTitleSize = self.graphImage['draw'].textsize(self.graphTitle, graphTitleFont)
+
+            #draw the title text
+            graphTitleTextPosition = [int((self.graphImage['base'].size[0] - graphTitleSize[0]) / 2), int((barGraphTopPadding - graphTitleSize[1]) / 2)]
+            self.graphImage['draw'].text(graphTitleTextPosition, self.graphTitle, graphTitleColor, font = graphTitleFont)
 
         #save the image
         self.graphImage['base'].save(path)
