@@ -9,5 +9,11 @@
             "backgroundColor":"#ffffff" // (STRING) used as the background color for the graph (must be a hex color code with a pound symbol at the beginning)
             "borderColor":"#000000" // (STRING) used as the color for the borders/outlines of the graph (must be a hex color code with a pound symbol at the beginning)
             "crosshairColor":"#000000" // (STRING) used as the color for the crosshairs of a linear graph (must be a hex color code with a pound symbol at the beginning)
+            "titleColors":{ // (DICTIONARY) used as the colors for the titles for each axis
+                "xAxis":"#0b0b0b", // (STRING) the color for the title(s) on the x axis (must be a hex color code with a pound symbol at the beginning)
+                "yAxis":"#0b0b0b", // (STRING) the color for the title on the y axis (must be a hex color code with a pound symbol at the beginning)
+                "graphTitle":"#0b0b0b", // (STRING) the color for the top title of the graph (must be a hex color code with a pound symbol at the beginning)
+            }
         }
     If you are having trouble understanding this format, then raise an issue on the github repo for this project.
+    An example of this format can be seen in the file "./grayscale.pygcs".

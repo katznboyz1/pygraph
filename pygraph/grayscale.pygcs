@@ -17,5 +17,10 @@
     "textSizeForTitles":15,
     "backgroundColor":"#ffffff",
     "borderColor":"#000000",
-    "crosshairColor":"#0b0b0b"
+    "crosshairColor":"#0b0b0b",
+    "titleColors":{
+        "xAxis":"#0b0b0b",
+        "yAxis":"#0b0b0b",
+        "graphTitle":"#0b0b0b"
+    }
 }

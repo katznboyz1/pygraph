@@ -18,9 +18,10 @@ class createBlankBarGraph(object):
     graphBarsMax = None
     graphTitle = 'Title'
     graphXTitle = 'X Axis Title'
+    fontPath = None
 
     #function to initialize the class
-    def __init__(self, graphColorSheetPath, width, height) -> None:
+    def __init__(self, graphColorSheetPath, fontPath, width, height) -> None:
 
         #set the variable for the color sheet path
         self.graphColorSheetPath = graphColorSheetPath
@@ -30,6 +31,15 @@ class createBlankBarGraph(object):
             pass
         else:
             raise pygraphGraphicsException('For some reason loadColorSheet() returned false, this should never happen. Reinstalling the module should fix this.')
+
+        #check that the font path is valid
+        try:
+            assert os.path.exists(fontPath)
+        except AssertionError:
+            raise FileNotFoundError('The font file located at "{}" was not found.'.format(fontPath))
+
+        #set the font path
+        self.fontPath = fontPath
 
         #set the variables
         self.graphImage['base'] = PIL.Image.new('RGBA', [width, height], self.colorSheetData['backgroundColor'])
@@ -95,7 +105,15 @@ class createBlankBarGraph(object):
         try:
             assert 'backgroundColor' in jsonData
         except AssertionError:
-            raise pygraphGraphicsException('THe graph color sheet you attempted to load does not contain the key "backgroundColor", so it failed to load.')
+            raise pygraphGraphicsException('The graph color sheet you attempted to load does not contain the key "backgroundColor", so it failed to load.')
+        try:
+            assert 'titleColors' in jsonData
+        except AssertionError:
+            raise pygraphGraphicsException('The graph color sheet you attempted to load does not contain the key "titleColors", so it failed to load.')
+        try:
+            assert type(jsonData['titleColors']) == dict
+        except AssertionError:
+            raise pygraphGraphicsException('The graph color sheet you attempted to load supplied a non dictionary value for "titleColors", so it failed to load.')
 
         #since it is valid then set the color data to this
         self.colorSheetData = jsonData
@@ -127,6 +145,12 @@ class createBlankBarGraph(object):
                 (int(barGraphSafeZoneBounds[0][0]), int(barGraphSafeZoneBounds[1][1])),
                 (*barGraphSafeZoneBounds[1])
             ], fill = borderColor, width = 2)
+        
+        #if the user wants to draw the titles then draw them
+        if (drawTitles):
+
+            #get the title colors
+            pass
 
         #save the image
         self.graphImage['base'].save(path)
