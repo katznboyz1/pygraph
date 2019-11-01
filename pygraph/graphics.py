@@ -230,7 +230,7 @@ class createBlankBarGraph(object):
 
             #if the color step is greater than the data color length then reset it
             colorStep += 1
-            if (colorStep > len(self.colorSheetData['graphDataColors'])):
+            if (colorStep >= len(self.colorSheetData['graphDataColors'])):
                 colorStep = 0
 
         #save the image
