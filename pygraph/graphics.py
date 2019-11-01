@@ -19,7 +19,7 @@ class createBlankBarGraph(object):
     graphTitle = 'Title'
     graphYTitle = 'Y Axis Title'
     fontPath = None
-    graphData = {}
+    graphData = []
 
     #function to initialize the class
     def __init__(self, graphColorSheetPath, fontPath, width, height) -> None:
@@ -141,7 +141,7 @@ class createBlankBarGraph(object):
             raise pygraphGraphicsException('The value title you supplied already exists. The graph can not have two entries with the same title. The value supplied was "{}".'.format(valueTitle))
         
         #store the values
-        self.graphData[valueTitle] = valueMeasure
+        self.graphData.append([valueTitle, valueMeasure])
 
     #function to save the graph to an image file
     def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True, maxDataPlotSize = float('inf'), bottomTitleTextSize = None) -> str:
@@ -204,8 +204,7 @@ class createBlankBarGraph(object):
         graphDataEntryWidth = int(barGraphSafeZoneBounds[1][0] - barGraphSafeZoneBounds[0][0])
         graphDataEntryHeight = int(barGraphSafeZoneBounds[1][1] - barGraphSafeZoneBounds[0][1])
         graphDataEntryPoints = len(self.graphData)
-        graphDataList = list(self.graphData)
-        graphDataList.reverse()
+        self.graphData.reverse()
         colorStep = 0
         dataWidth = int(graphDataEntryWidth / graphDataEntryPoints)
         if (dataWidth > maxDataPlotSize):
@@ -213,14 +212,14 @@ class createBlankBarGraph(object):
         dataWidthHalf = int(dataWidth / 2)
         measures = []
         for each in self.graphData:
-            measures.append(self.graphData[each])
+            measures.append(each[1])
         maxMeasure = max(measures)
         dataPositions = []
 
         #iterate through the data
         for plot in range(graphDataEntryPoints):
-            title = graphDataList[plot]
-            measure = self.graphData[graphDataList[plot]]
+            title = self.graphData[plot][0]
+            measure = self.graphData[plot][1]
             currentGraphColor = self.colorSheetData['graphDataColors'][colorStep]
             xPosition = plot * dataWidth
             height = int((measure / maxMeasure) * graphDataEntryHeight)
