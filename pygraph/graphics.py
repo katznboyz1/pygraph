@@ -219,7 +219,7 @@ class createBlankBarGraph(object):
         #iterate through the data
         for plot in range(graphDataEntryPoints):
             title = graphDataList[plot]
-            measure = self.graphData[title]
+            measure = self.graphData[graphDataList[plot]]
             currentGraphColor = self.colorSheetData['graphDataColors'][colorStep]
             xPosition = plot * dataWidth
             height = int((measure / maxMeasure) * graphDataEntryHeight)
@@ -229,8 +229,8 @@ class createBlankBarGraph(object):
                 int(barGraphSafeZoneBounds[0][0] + xPosition), int(barGraphSafeZoneBounds[1][1] - height), int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1])
             ], fill = currentGraphColor, outline = currentGraphColor, width = 1)
 
-            #save the position of the data [TITLE, X, Y]
-            dataPositions.append([title, int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1])])
+            #save the position of the data [TITLE, X, Y, MEASURE]
+            dataPositions.append([title, int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1]), measure])
 
             #if the color step is greater than the data color length then reset it
             colorStep += 1
@@ -251,7 +251,7 @@ class createBlankBarGraph(object):
         #draw the title for each plot
         for index in dataPositions:
             position = [index[2], index[1] + bottomTitleTextSize]
-            self.graphImage['draw'].text(position, str(index[0]), self.colorSheetData['titleColors']['xAxis'], font = bottomTitleFont)
+            self.graphImage['draw'].text(position, str(index[0]) + ' : ' + str(index[3]), self.colorSheetData['titleColors']['xAxis'], font = bottomTitleFont)
 
         #rotate the image back to normal so that it can be saved
         self.graphImage['base'] = self.graphImage['base'].rotate(-90, expand = 1)
