@@ -123,7 +123,7 @@ class createBlankBarGraph(object):
         return True
     
     #function to add a value to the graph
-    def addValueToChart(self, valueTitle, valueMeasure) -> None:
+    def addValue(self, valueTitle, valueMeasure) -> None:
 
         #convert the value title to a string
         valueTitle = str(valueTitle)
