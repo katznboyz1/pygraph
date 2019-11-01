@@ -217,11 +217,12 @@ class createBlankBarGraph(object):
         dataPositions = []
 
         #iterate through the data
-        for plot in range(graphDataEntryPoints):
-            title = self.graphData[plot][0]
-            measure = self.graphData[plot][1]
+        step = 0
+        for plot in self.graphData:
+            title = plot[0]
+            measure = plot[1]
             currentGraphColor = self.colorSheetData['graphDataColors'][colorStep]
-            xPosition = plot * dataWidth
+            xPosition = step * dataWidth
             height = int((measure / maxMeasure) * graphDataEntryHeight)
 
             #draw the rectangle
@@ -236,6 +237,9 @@ class createBlankBarGraph(object):
             colorStep += 1
             if (colorStep >= len(self.colorSheetData['graphDataColors'])):
                 colorStep = 0
+
+            #increase the normal step
+            step += 1
         
         #rotate the image sideways so that the text can be drawn for the plot titles
         self.graphImage['base'] = self.graphImage['base'].rotate(90, expand = 1)
@@ -250,7 +254,7 @@ class createBlankBarGraph(object):
 
         #draw the title for each plot
         for index in dataPositions:
-            position = [index[2], index[1] + bottomTitleTextSize]
+            position = [(index[2] + 5), self.graphImage['base'].size[1] - index[1]]
             self.graphImage['draw'].text(position, str(index[0]) + ' : ' + str(index[3]), self.colorSheetData['titleColors']['xAxis'], font = bottomTitleFont)
 
         #rotate the image back to normal so that it can be saved
