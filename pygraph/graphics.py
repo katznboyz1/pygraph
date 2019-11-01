@@ -144,7 +144,7 @@ class createBlankBarGraph(object):
         self.graphData[valueTitle] = valueMeasure
 
     #function to save the graph to an image file
-    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True, maxDataPlotSize = float('inf')) -> str:
+    def save(self, path, barGraphTopPadding = 200, barGraphSidePadding = 100, barGraphBottomPadding = 200, drawTitles = True, drawBorders = True, maxDataPlotSize = float('inf'), bottomTitleTextSize = None) -> str:
 
         #convert the path to a string just in case
         path = str(path)
@@ -214,6 +214,7 @@ class createBlankBarGraph(object):
         for each in self.graphData:
             measures.append(self.graphData[each])
         maxMeasure = max(measures)
+        dataPositions = []
 
         #iterate through the data
         for plot in range(graphDataEntryPoints):
@@ -228,10 +229,35 @@ class createBlankBarGraph(object):
                 int(barGraphSafeZoneBounds[0][0] + xPosition), int(barGraphSafeZoneBounds[1][1] - height), int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1])
             ], fill = currentGraphColor, outline = currentGraphColor, width = 1)
 
+            #save the position of the data [TITLE, X, Y]
+            dataPositions.append([title, int(barGraphSafeZoneBounds[0][0] + xPosition + dataWidthHalf), int(barGraphSafeZoneBounds[1][1])])
+
             #if the color step is greater than the data color length then reset it
             colorStep += 1
             if (colorStep >= len(self.colorSheetData['graphDataColors'])):
                 colorStep = 0
+        
+        #rotate the image sideways so that the text can be drawn for the plot titles
+        self.graphImage['base'] = self.graphImage['base'].rotate(90, expand = 1)
+        self.graphImage['base'].save(path)
+        self.graphImage['base'] = PIL.Image.open(path)
+        self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
+
+        #create a font for the bottom titles
+        if (bottomTitleTextSize == None or bottomTitleTextSize < 0):
+            bottomTitleTextSize = int(barGraphBottomPadding / 10)
+        bottomTitleFont = PIL.ImageFont.truetype(self.fontPath, bottomTitleTextSize)
+
+        #draw the title for each plot
+        for index in dataPositions:
+            position = [index[2], index[1] + bottomTitleTextSize]
+            self.graphImage['draw'].text(position, str(index[0]), self.colorSheetData['titleColors']['xAxis'], font = bottomTitleFont)
+
+        #rotate the image back to normal so that it can be saved
+        self.graphImage['base'] = self.graphImage['base'].rotate(-90, expand = 1)
+        self.graphImage['base'].save(path)
+        self.graphImage['base'] = PIL.Image.open(path)
+        self.graphImage['draw'] = PIL.ImageDraw.Draw(self.graphImage['base'])
 
         #save the image
         self.graphImage['base'].save(path)
