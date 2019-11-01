@@ -205,6 +205,7 @@ class createBlankBarGraph(object):
         graphDataEntryHeight = int(barGraphSafeZoneBounds[1][1] - barGraphSafeZoneBounds[0][1])
         graphDataEntryPoints = len(self.graphData)
         graphDataList = list(self.graphData)
+        graphDataList.reverse()
         colorStep = 0
         dataWidth = int(graphDataEntryWidth / graphDataEntryPoints)
         if (dataWidth > maxDataPlotSize):
